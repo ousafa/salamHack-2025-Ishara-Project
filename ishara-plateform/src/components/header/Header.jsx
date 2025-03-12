@@ -1,11 +1,11 @@
-import 'bootstrap-icons/font/bootstrap-icons.css';
-function Header() {
-  return (
-    <div className="container mt-5">
-      <h1 className="text-center">Hello Ishara </h1>
-      <button className="btn btn-primary">Click Me</button>
-      <i class="bi bi-0-circle"></i>
-    </div>
-  );
-}
+import './Header.css';
+
+
+function Header(){
+    return (
+      <div className="text-center mb-4">
+        <h2 className="logo">Ishara</h2>
+      </div>
+    );
+  };
 export default Header;
