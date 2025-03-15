@@ -8,14 +8,29 @@ import Chat from "./components/Chat/Chat";
 import { useState } from "react";
 
 function App() {
-  const [open, setOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   return (
     <div
+      className="d-flex flex-column justify-content-between align-items-center"
+      style={{ height: "100vh" }}
+    >
+      <Header />
+      <Main />
+      {isChatOpen ? (
+        <Chat />
+      ) : (
+        <button type="button" class="btn btn-outline-info  fs-4 fw-medium text-black" onClick={() => setIsChatOpen(true)}>
+          Get Started
+        </button>
+      )}
+      <Footer />
+    </div>
+  );
+  /*const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="d-flex flex-column justify-content-between align-items-center"
       style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-between",
         height: "100vh",
       }}
     >
@@ -29,7 +44,7 @@ function App() {
 
       <Footer />
     </div>
-  );
+  );*/ //
 }
 
 export default App;
