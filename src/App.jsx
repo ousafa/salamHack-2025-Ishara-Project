@@ -1,7 +1,6 @@
 import Header from "./components/header/Header";
 import Main from "./components/main/Main";
 import ChatInput from "./components/chat-input/ChatInput";
-import Disclaimer from "./components/disclaimer/Disclaimer";
 import Footer from "./components/footer/Footer";
 import "./App.css";
 import Chat from "./components/Chat/Chat";

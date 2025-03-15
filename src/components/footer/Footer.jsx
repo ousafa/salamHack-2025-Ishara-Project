@@ -4,7 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 function Footer() {
 
   return (
-    <footer className={`d-flex justify-content-between align-items-center p-3`}>
+    <footer className={`d-flex justify-content-between align-items-center p-3 mt-3 `}>
       <div>
         <span className="fw-bold">Ishara</span>
       </div>

@@ -32,15 +32,14 @@
   /* align-self: flex-end; */
   text-align: left;
 }
-form{
-    width: 100%;
+form {
+  width: 100%;
 }
 .input-container {
   display: flex;
   padding: 10px;
   border-top: 1px solid #ccc;
   background-color: #fff;
-   
 }
 
 input[type="text"] {
@@ -49,15 +48,21 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-right: 10px;
-  width: 80%;
+  width: 70%;
 }
 
 .sendBtn {
   padding: 10px 20px;
+  margin-left: 5px;
   font-size: 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  width: 18%;
 }
-
+.uploadBtn {
+  padding: 10px 20px;
+  font-size: 20px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  cursor: pointer;
+}

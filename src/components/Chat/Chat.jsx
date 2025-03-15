@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Chat.css";
+import Disclaimer from "../Disclaimer/Disclaimer";
 import Together from "together-ai";
 
 const Chat = ({ msg, setMsg }) => {
@@ -35,45 +36,53 @@ const Chat = ({ msg, setMsg }) => {
   };
 
   return (
-    <div className="chat-container">
-      <div className="messages">
-        {msg.map((message, index) => (
-          <div
-            key={index}
-            className={`message ${message.user === "bot" ? "bot" : "user"}`}
-          >
-            <strong
-              style={{ textAlign: message.user === "bot" ? "left" : "right" }}
+    <>
+      <div className="chat-container">
+        <div className="messages">
+          {msg.map((message, index) => (
+            <div
+              key={index}
+              className={`message ${message.user === "bot" ? "bot" : "user"}`}
             >
-              {message.user}
-            </strong>
-            <p style={{ textAlign: message.user === "bot" ? "left" : "right" }}>
-              {message.text}
-            </p>
-          </div>
-        ))}
+              <strong
+                style={{ textAlign: message.user === "bot" ? "left" : "right" }}
+              >
+                {message.user}
+              </strong>
+              <p
+                style={{ textAlign: message.user === "bot" ? "left" : "right" }}
+              >
+                {message.text}
+              </p>
+            </div>
+          ))}
 
-        {loading && (
-          <div className="message bot">
-            <strong style={{ textAlign: "left" }}>Ishara</strong>
-            <p style={{ textAlign: "left" }}>Loading...</p>
-          </div>
-        )}
+          {loading && (
+            <div className="message bot">
+              <strong style={{ textAlign: "left" }}>Ishara</strong>
+              <p style={{ textAlign: "left" }}>Loading...</p>
+            </div>
+          )}
+        </div>
+        <div className="input-container">
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your message..."
+            />
+            <button type="submit" className="btn uploadBtn">
+              Upload image
+            </button>
+            <button type="submit" className="btn btn-info sendBtn">
+              Send
+            </button>
+          </form>
+        </div>
       </div>
-      <div className="input-container">
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-          />
-          <button type="submit" className="btn btn-info sendBtn">
-            Send
-          </button>
-        </form>
-      </div>
-    </div>
+      <Disclaimer />
+    </>
   );
 };
 
