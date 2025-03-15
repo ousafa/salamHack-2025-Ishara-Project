@@ -10,13 +10,13 @@ function Footer() {
       </div>
       <div className="d-flex align-items-center">
         <div className="ms-3">
-          <Button variant="light" size="sm" className="rounded-circle mx-1">
+          <Button variant="white" size="sm" className="rounded-circle mx-1">
             <i className="bi bi-facebook"></i>
           </Button>
-          <Button variant="light" size="sm" className="rounded-circle mx-1">
+          <Button variant="white" size="sm" className="rounded-circle mx-1">
             <i className="bi bi-github"></i>
           </Button>
-          <Button variant="light" size="sm" className="rounded-circle mx-1">
+          <Button variant="white" size="sm" className="rounded-circle mx-1">
             <i className="bi bi-twitter-x"></i>
           </Button>
         </div>
