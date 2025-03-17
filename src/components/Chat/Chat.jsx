@@ -22,13 +22,13 @@ const Chat = ({ msg, setMsg }) => {
 
     try {
       const response = await getMedicalSuggestion(input);
-      const botMessage = { user: "bot", text: response };
+      const botMessage = { user: "Ishara", text: response };
       setMsg((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
       console.log("API Error:", error);
       setMsg((prevMessages) => [
         ...prevMessages,
-        { user: "bot", text: "Sorry, I couldn't fetch a response." },
+        { user: "Ishara", text: "Sorry, I couldn't fetch a response." },
       ]);
     } finally {
       setLoading(false);
@@ -42,15 +42,21 @@ const Chat = ({ msg, setMsg }) => {
           {msg.map((message, index) => (
             <div
               key={index}
-              className={`message ${message.user === "bot" ? "bot" : "user"}`}
+              className={`message ${
+                message.user === "Ishara" ? "bot" : "user"
+              }`}
             >
               <strong
-                style={{ textAlign: message.user === "bot" ? "left" : "right" }}
+                style={{
+                  textAlign: message.user === "Ishara" ? "left" : "right",
+                }}
               >
-                {message.user}
+                q{message.user}
               </strong>
               <p
-                style={{ textAlign: message.user === "bot" ? "left" : "right" }}
+                style={{
+                  textAlign: message.user === "Ishara" ? "left" : "right",
+                }}
               >
                 {message.text}
               </p>
