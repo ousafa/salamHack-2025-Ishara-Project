@@ -6,10 +6,15 @@ import Together from "together-ai";
 const Chat = ({ msg, setMsg }) => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await handleSendMessage();
+    if (image) {
+      await handleImageUpload();
+    } else {
+      await handleSendMessage();
+    }
   };
 
   const handleSendMessage = async () => {
@@ -23,6 +28,46 @@ const Chat = ({ msg, setMsg }) => {
     try {
       const response = await getMedicalSuggestion(input);
       const botMessage = { user: "bot", text: response };
+      setMsg((prevMessages) => [...prevMessages, botMessage]);
+    } catch (error) {
+      console.log("API Error:", error);
+      setMsg((prevMessages) => [
+        ...prevMessages,
+        { user: "bot", text: "Sorry, I couldn't fetch a response." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!image) return;
+
+    const newMessage = {
+      user: "You",
+      text: "Image uploaded",
+      image: URL.createObjectURL(image),
+    };
+    setMsg((prevMessages) => [...prevMessages, newMessage]);
+    setLoading(true);
+    setImage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", image);
+      console.log(formData);
+
+      const response = await fetch(" http://localhost:5000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      const extractedText = data.extractedText;
+      console.log(extractedText);
+
+      const aiResponse = await getMedicalSuggestion(extractedText);
+      const botMessage = { user: "bot", text: aiResponse };
       setMsg((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
       console.log("API Error:", error);
@@ -49,11 +94,21 @@ const Chat = ({ msg, setMsg }) => {
               >
                 {message.user}
               </strong>
-              <p
-                style={{ textAlign: message.user === "bot" ? "left" : "right" }}
-              >
-                {message.text}
-              </p>
+              {message.image ? (
+                <img
+                  src={message.image}
+                  alt="Uploaded"
+                  style={{ maxWidth: "100%" }}
+                />
+              ) : (
+                <p
+                  style={{
+                    textAlign: message.user === "bot" ? "left" : "right",
+                  }}
+                >
+                  {message.text}
+                </p>
+              )}
             </div>
           ))}
 
@@ -68,14 +123,24 @@ const Chat = ({ msg, setMsg }) => {
           <form onSubmit={handleSubmit}>
             <input
               type="text"
+              placeholder="Enter your symptom"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
+              className="textInput"
             />
-            <button type="submit" className="btn uploadBtn">
+
+            <input
+              type="file"
+              accept="image/*"
+              name="file"
+              onChange={(e) => setImage(e.target.files[0])}
+              style={{ display: "none" }}
+              id="fileInput"
+            />
+            <label htmlFor="fileInput" className="btn uploadBtn">
               Upload image
-            </button>
-            <button type="submit" className="btn btn-info sendBtn">
+            </label>
+            <button type="submit" className="btn sendBtn btn-info">
               Send
             </button>
           </form>
