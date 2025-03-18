@@ -7,9 +7,11 @@ const Chat = ({ msg, setMsg }) => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null); // State for image preview
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     if (image) {
       await handleImageUpload();
     } else {
@@ -51,13 +53,14 @@ const Chat = ({ msg, setMsg }) => {
     setMsg((prevMessages) => [...prevMessages, newMessage]);
     setLoading(true);
     setImage(null);
+    setImagePreview(null); // Clear the preview after sending
 
     try {
       const formData = new FormData();
       formData.append("file", image);
       console.log(formData);
 
-      const response = await fetch(" http://localhost:5000/upload", {
+      const response = await fetch("http://localhost:5000/upload", {
         method: "POST",
         body: formData,
       });
@@ -80,6 +83,14 @@ const Chat = ({ msg, setMsg }) => {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file)); // Set the preview URL
+    }
+  };
+
   return (
     <>
       <div className="chat-container">
@@ -99,6 +110,7 @@ const Chat = ({ msg, setMsg }) => {
                   src={message.image}
                   alt="Uploaded"
                   style={{ maxWidth: "100%" }}
+                  className="upImg"
                 />
               ) : (
                 <p
@@ -133,7 +145,7 @@ const Chat = ({ msg, setMsg }) => {
               type="file"
               accept="image/*"
               name="file"
-              onChange={(e) => setImage(e.target.files[0])}
+              onChange={handleImageChange}
               style={{ display: "none" }}
               id="fileInput"
             />
@@ -144,6 +156,15 @@ const Chat = ({ msg, setMsg }) => {
               Send
             </button>
           </form>
+          {imagePreview && (
+            <div className="image-preview">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                style={{ maxWidth: "100%", marginTop: "10px" }}
+              />
+            </div>
+          )}
         </div>
       </div>
       <Disclaimer />
