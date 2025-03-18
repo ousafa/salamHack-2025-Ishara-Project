@@ -20,6 +20,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     } = await Tesseract.recognize(req.file.buffer, "eng");
     res.json({ extractedText: text });
   } catch (error) {
+    console.log(error);
     res.status(500).send("Error processing image");
   }
 });

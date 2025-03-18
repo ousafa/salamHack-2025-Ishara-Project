@@ -42,7 +42,8 @@ form {
   background-color: #fff;
 }
 
-input[type="text"] {
+input[type="text"] ,
+input[type="file"] {
   flex: 1;
   padding: 10px;
   border: 1px solid #ccc;

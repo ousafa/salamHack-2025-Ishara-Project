@@ -6,10 +6,16 @@ import Together from "together-ai";
 const Chat = ({ msg, setMsg }) => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
+  const [mode, setMode] = useState("text");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await handleSendMessage();
+    if (mode === "image" && image) {
+      await handleImageUpload();
+    } else {
+      await handleSendMessage();
+    }
   };
 
   const handleSendMessage = async () => {
@@ -35,6 +41,59 @@ const Chat = ({ msg, setMsg }) => {
     }
   };
 
+  const handleImageUpload = async () => {
+    if (!image) return;
+
+    const newMessage = {
+      user: "You",
+      text: "Image uploaded",
+      image: URL.createObjectURL(image),
+    };
+    setMsg((prevMessages) => [...prevMessages, newMessage]);
+    setLoading(true);
+    setImage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", image);
+      console.log(formData);
+
+      const response = await fetch(" http://localhost:5000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      const extractedText = data.extractedText;
+      console.log(extractedText);
+
+      const aiResponse = await getMedicalSuggestion(extractedText);
+      const botMessage = { user: "Ishara", text: aiResponse };
+      setMsg((prevMessages) => [...prevMessages, botMessage]);
+    } catch (error) {
+      console.log("API Error:", error);
+      setMsg((prevMessages) => [
+        ...prevMessages,
+        { user: "Ishara", text: "Sorry, I couldn't fetch a response." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setInput(e.target.value);
+    if (e.target.value.trim() === "") {
+      setMode("text");
+    }
+  };
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
+      setMode("image"); 
+      
+    }
+  };
   return (
     <>
       <div className="chat-container">
@@ -51,15 +110,23 @@ const Chat = ({ msg, setMsg }) => {
                   textAlign: message.user === "Ishara" ? "left" : "right",
                 }}
               >
-                q{message.user}
+                {message.user}
               </strong>
-              <p
-                style={{
-                  textAlign: message.user === "Ishara" ? "left" : "right",
-                }}
-              >
-                {message.text}
-              </p>
+              {message.image ? (
+                <img
+                  src={message.image}
+                  alt="Uploaded"
+                  style={{ maxWidth: "100%" }}
+                />
+              ) : (
+                <p
+                  style={{
+                    textAlign: message.user === "Ishara" ? "left" : "right",
+                  }}
+                >
+                  {message.text}
+                </p>
+              )}
             </div>
           ))}
 
@@ -72,16 +139,29 @@ const Chat = ({ msg, setMsg }) => {
         </div>
         <div className="input-container">
           <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
-            />
-            <button type="submit" className="btn uploadBtn">
+            {mode === "text" ? (
+              <input
+                type="text"
+                placeholder="Enter your symptom"
+                value={input}
+                onChange={handleInputChange}
+                className="textInput"
+              />
+            ) : (
+              <input
+                type="file"
+                accept="image/*"
+                name="file"
+                onChange={handleFileChange}
+                id="fileInput"
+              />
+            )}
+
+            <label htmlFor="fileInput" className="uploadBtn"  onClick={() => setMode("image")}>
               Upload image
-            </button>
-            <button type="submit" className="btn btn-info sendBtn">
+            </label>
+
+            <button type="submit" className="btn sendBtn btn-info">
               Send
             </button>
           </form>
