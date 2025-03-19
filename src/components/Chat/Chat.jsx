@@ -7,11 +7,13 @@ const Chat = ({ msg, setMsg }) => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
-  const [mode, setMode] = useState("text");
+
+  const [imagePreview, setImagePreview] = useState(null); // State for image preview
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (mode === "image" && image) {
+
+    if (image) {
       await handleImageUpload();
     } else {
       await handleSendMessage();
@@ -52,13 +54,14 @@ const Chat = ({ msg, setMsg }) => {
     setMsg((prevMessages) => [...prevMessages, newMessage]);
     setLoading(true);
     setImage(null);
+    setImagePreview(null); // Clear the preview after sending
 
     try {
       const formData = new FormData();
       formData.append("file", image);
       console.log(formData);
 
-      const response = await fetch(" http://localhost:5000/upload", {
+      const response = await fetch("http://localhost:5000/upload", {
         method: "POST",
         body: formData,
       });
@@ -81,19 +84,14 @@ const Chat = ({ msg, setMsg }) => {
     }
   };
 
-  const handleInputChange = (e) => {
-    setInput(e.target.value);
-    if (e.target.value.trim() === "") {
-      setMode("text");
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file)); // Set the preview URL
     }
   };
-  const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
-      setMode("image"); 
-      
-    }
-  };
+
   return (
     <>
       <div className="chat-container">
@@ -117,6 +115,7 @@ const Chat = ({ msg, setMsg }) => {
                   src={message.image}
                   alt="Uploaded"
                   style={{ maxWidth: "100%" }}
+                  className="upImg"
                 />
               ) : (
                 <p
@@ -139,25 +138,22 @@ const Chat = ({ msg, setMsg }) => {
         </div>
         <div className="input-container">
           <form onSubmit={handleSubmit}>
-            {mode === "text" ? (
-              <input
-                type="text"
-                placeholder="Enter your symptom"
-                value={input}
-                onChange={handleInputChange}
-                className="textInput"
-              />
-            ) : (
-              <input
-                type="file"
-                accept="image/*"
-                name="file"
-                onChange={handleFileChange}
-                id="fileInput"
-              />
-            )}
+            <input
+              type="text"
+              placeholder="Enter your symptom"
+              value={input}
+              className="textInput"
+            />
 
-            <label htmlFor="fileInput" className="uploadBtn"  onClick={() => setMode("image")}>
+            <input
+              type="file"
+              accept="image/*"
+              name="file"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+              id="fileInput"
+            />
+            <label htmlFor="fileInput" className="btn uploadBtn">
               Upload image
             </label>
 
@@ -165,6 +161,15 @@ const Chat = ({ msg, setMsg }) => {
               Send
             </button>
           </form>
+          {imagePreview && (
+            <div className="image-preview">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                style={{ maxWidth: "100%", marginTop: "10px" }}
+              />
+            </div>
+          )}
         </div>
       </div>
       <Disclaimer />

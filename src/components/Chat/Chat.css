@@ -24,13 +24,17 @@
 
 .message {
   /*background-color: #d1e7dd;*/
-  /* align-self: flex-start; */
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
 }
 
 .message.bot {
   /*background-color: #f8d7da;*/
   /* align-self: flex-end; */
-  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
 }
 form {
   width: 100%;
@@ -40,6 +44,7 @@ form {
   padding: 10px;
   border-top: 1px solid #ccc;
   background-color: #fff;
+  position: relative;
 }
 
 input[type="text"] ,
@@ -66,4 +71,18 @@ input[type="file"] {
   border: 1px solid gray;
   border-radius: 5px;
   cursor: pointer;
+}
+.upImg {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+.image-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  position: absolute;
+  border: 1px solid black;
+  right: 150px;
+  bottom: 90px;
 }
