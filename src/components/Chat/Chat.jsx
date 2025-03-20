@@ -61,13 +61,10 @@ const Chat = ({ msg, setMsg }) => {
       formData.append("file", image);
       console.log(formData);
 
-      const response = await fetch(
-        "https://ousafa.github.io/salamHack-2025-Ishara-Project/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch("https://backend-ishara.up.railway.app/upload", {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await response.json();
       const extractedText = data.extractedText;
