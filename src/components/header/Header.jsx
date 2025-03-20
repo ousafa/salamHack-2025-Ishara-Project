@@ -1,5 +1,5 @@
 import "./Header.css";
-import logo from "./isharaLogo.png";
+import logo from "/isharaLogo.png";
 
 function Header({ newChatButton }) {
   return (
