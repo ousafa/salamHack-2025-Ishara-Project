@@ -142,6 +142,7 @@ const Chat = ({ msg, setMsg }) => {
               type="text"
               placeholder="Enter your symptom"
               value={input}
+              onChange={(e) => setInput(e.target.value)}
               className="textInput"
             />
 
