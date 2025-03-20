@@ -61,7 +61,7 @@ const Chat = ({ msg, setMsg }) => {
       formData.append("file", image);
       console.log(formData);
 
-      const response = await fetch("https://backend-ishara.up.railway.app/upload", {
+      const response = await fetch("http://localhost:5000/upload", {
         method: "POST",
         body: formData,
       });
